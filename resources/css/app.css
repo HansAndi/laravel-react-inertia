@@ -1,0 +1,10 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+    .show:hover::after {
+        @apply absolute bg-white border border-gray-300 p-2 z-10;
+        content: attr(title);
+    }
+}
