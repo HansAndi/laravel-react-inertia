@@ -130,7 +130,8 @@ export default function Index({ auth, penerbit, filters }) {
         <AuthenticatedLayout
             user={auth.user}
             header={
-                <div className="text-right">
+                <div className='flex justify-between items-center'>
+                    <h2 className="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">Penerbit</h2>
                     <button className="btn btn-primary" onClick={() => openModal()}>Tambah</button>
                 </div>
             }
@@ -163,7 +164,7 @@ export default function Index({ auth, penerbit, filters }) {
                                     </thead>
                                     <tbody>
                                         {penerbit.data.length > 0 && penerbit.data.map((item, index) => (
-                                            <tr key={item.id}>
+                                            <tr key={index}>
                                                 <td>{
                                                     number > 1 ? (index + 1) + (number * (penerbit.meta.current_page - 1)) : index + 1
                                                 }</td>

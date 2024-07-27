@@ -106,7 +106,7 @@ export default function Index({ auth, kategori, filters }) {
 
     const handleSearch = useDebouncedCallback((value) => {
         get(
-            route('kategori.index', { search: value}),
+            route('kategori.index', { search: value }),
             {
                 preserveState: true,
                 replace: true,
@@ -129,7 +129,8 @@ export default function Index({ auth, kategori, filters }) {
         <AuthenticatedLayout
             user={auth.user}
             header={
-                <div className="text-right">
+                <div className='flex justify-between items-center'>
+                    <h2 className="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">Kategori</h2>
                     <button className="btn btn-primary" onClick={() => openModal()}>Tambah</button>
                 </div>
             }
@@ -162,7 +163,7 @@ export default function Index({ auth, kategori, filters }) {
                                     </thead>
                                     <tbody>
                                         {kategori.data.length > 0 && kategori.data.map((item, index) => (
-                                            <tr key={item.id}>
+                                            <tr key={index}>
                                                 <td>{
                                                     number > 1 ? (index + 1) + (number * (kategori.meta.current_page - 1)) : index + 1
                                                 }</td>

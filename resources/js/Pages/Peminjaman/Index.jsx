@@ -91,15 +91,12 @@ export default function Index({ auth, peminjaman, status, filters }) {
     }, [peminjaman.meta.current_page]);
 
     const number = peminjaman.meta.links.length;
-    console.log(peminjaman)
 
     return (
         <AuthenticatedLayout
             user={auth.user}
             header={
-                <div className="text-right">
-                    <button className="btn btn-primary" onClick={() => openModal()}>Tambah</button>
-                </div>
+                <h2 className="font-semibold text-xl text-gray-800 dark:text-gray-200">Peminjaman</h2>
             }
         >
             <Head title="Peminjaman" />
@@ -112,10 +109,10 @@ export default function Index({ auth, peminjaman, status, filters }) {
                                 <select
                                     className="border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
                                     name="status"
-                                    defaultValue={filters.status || 'default'}
+                                    defaultValue={filters.status || ''}
                                     onChange={(e) => handleStatusFilter(e.target.value)}
                                 >
-                                    <option value={'default'}>Pick one</option>
+                                    <option value={''}>Status</option>
                                     {status.map((item, index) => (
                                         <option key={index} value={item.value}>{item.status}</option>
                                     ))}

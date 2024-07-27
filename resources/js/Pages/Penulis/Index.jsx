@@ -114,7 +114,7 @@ export default function Index({ auth, penulis, filters }) {
     const handleSearch = useDebouncedCallback((value) => {
         console.log(value);
         get(
-            route('penulis.index', { search: value}),
+            route('penulis.index', { search: value }),
             {
                 preserveState: true,
                 replace: true,
@@ -137,7 +137,8 @@ export default function Index({ auth, penulis, filters }) {
         <AuthenticatedLayout
             user={auth.user}
             header={
-                <div className="text-right">
+                <div className='flex justify-between items-center'>
+                    <h2 className="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">Penulis</h2>
                     <button className="btn btn-primary" onClick={() => openModal()}>Tambah</button>
                 </div>
             }
@@ -170,7 +171,7 @@ export default function Index({ auth, penulis, filters }) {
                                     </thead>
                                     <tbody>
                                         {penulis.data.length > 0 && penulis.data.map((item, index) => (
-                                            <tr key={item.id}>
+                                            <tr key={index}>
                                                 <td>{
                                                     number > 1 ? (index + 1) + (number * (penulis.meta.current_page - 1)) : index + 1
                                                 }</td>
