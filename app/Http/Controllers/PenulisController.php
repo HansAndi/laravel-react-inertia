@@ -17,6 +17,8 @@ class PenulisController extends Controller
      */
     public function index()
     {
+        Gate::authorize('isAdmin');
+
         $time = 60 * 60 * 24;
         $page = request('page', 1);
         $cacheKey = 'penulis-page-' . $page;

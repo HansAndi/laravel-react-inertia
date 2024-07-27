@@ -31,15 +31,10 @@ class HandleInertiaRequests extends Middleware
      */
     public function share(Request $request): array
     {
-        $user = Cache::tags(['user'])->remember('user-' . Auth::id(), 60 * 60 * 24, function () use ($request) {
-            return $request->user();
-        });
-
         return [
             ...parent::share($request),
             'auth' => [
-                // 'user' => $request->user(),
-                'user' => $user,
+                'user' => $request->user(),
             ],
         ];
     }

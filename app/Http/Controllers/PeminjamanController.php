@@ -20,7 +20,8 @@ class PeminjamanController extends Controller
     {
         $time = 60 * 60 * 24;
         $page = request('page', 1);
-        $cacheKey = 'peminjaman-page-' . $page;
+        $name = Gate::allows('isAdmin') ? 'admin' : $request->user()->name;
+        $cacheKey = $name .'-peminjaman-page-' . $page;
         $search = request('search');
         $status = request('status');
 
@@ -33,7 +34,6 @@ class PeminjamanController extends Controller
         }
 
         if (Gate::allows('isAdmin')) {
-            $cacheKey = 'admin-peminjaman-page-' . $page;
             $peminjaman = Cache::tags(['peminjaman-pagination'])->remember($cacheKey, $time, function () {
                 return Peminjaman::filter(request(['search', 'status']))
                     ->select('uuid', 'user_id', 'id_buku', 'tanggal_pinjam', 'tanggal_kembali', 'status_peminjaman', 'approved')
@@ -42,7 +42,6 @@ class PeminjamanController extends Controller
                     ->paginate(10)->onEachSide(1)->withQueryString();
             });
         } else {
-            $cacheKey = $request->user()->name . '-peminjaman-page-' . $page;
             $peminjaman = Cache::tags(['peminjaman-pagination'])->remember($cacheKey, $time, function () {
                 return Peminjaman::filter(request(['search', 'status']))
                     ->select('uuid', 'id_buku', 'tanggal_pinjam', 'tanggal_kembali', 'status_peminjaman', 'approved')
