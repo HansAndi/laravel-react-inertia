@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\StatusPeminjaman;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -11,6 +12,7 @@ class Peminjaman extends Model
 
     protected $table = 'peminjaman';
     protected $fillable = ['user_id', 'id_buku', 'tanggal_pinjam', 'tanggal_kembali', 'status_peminjaman', 'approved'];
+    protected $casts = ['status_peminjaman' => StatusPeminjaman::class];
 
     public function getRouteKeyName()
     {

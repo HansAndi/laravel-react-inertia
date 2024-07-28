@@ -20,7 +20,7 @@ return new class extends Migration
             $table->dateTime('tanggal_pinjam');
             $table->dateTime('tanggal_kembali')->nullable();
             $table->boolean('approved')->default(false);
-            $table->boolean('status_peminjaman')->default(false);
+            $table->tinyInteger('status_peminjaman')->default(1);
             $table->timestamps();
         });
     }

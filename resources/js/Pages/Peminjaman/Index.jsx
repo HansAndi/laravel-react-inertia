@@ -9,7 +9,7 @@ import { useEffect, useRef, useState } from 'react';
 import { toast } from 'react-toastify';
 import { useDebouncedCallback } from 'use-debounce';
 
-export default function Index({ auth, peminjaman, status, filters }) {
+export default function Index({ auth, peminjaman, status, can, filters }) {
     const [showModal, setShowModal] = useState(false);
     const [peminjamanId, setPeminjamanId] = useState(null);
     const searchRef = useRef(null);
@@ -129,7 +129,7 @@ export default function Index({ auth, peminjaman, status, filters }) {
                                 />
                             </div>
                             <div className="overflow-x-auto p-5">
-                                <table className="table table-zebra text-center">
+                                <table className="table table-zebra">
                                     <thead>
                                         <tr>
                                             <th>#</th>
@@ -150,17 +150,15 @@ export default function Index({ auth, peminjaman, status, filters }) {
                                                     number > 1 ? (index + 1) + (number * (peminjaman.meta.current_page - 1)) : index + 1
                                                 }</td>
                                                 {auth.user.is_admin ? (
-                                                    <td className='w-48'>{item.user.name}</td>
+                                                    <td className='w-32'>{item.user.name}</td>
                                                 ) : null}
                                                 <td className="w-52">{`${item.book.judul.split(' ').slice(0, 4).join(' ')}` + (item.book.judul.split(' ').length > 4 ? '...' : '')}</td>
                                                 <td className=''>{item.tanggal_pinjam}</td>
                                                 <td className={`${item.tanggal_kembali ? 'show' : ''}`} title={item.tanggal_kembali_full}>{item.tanggal_kembali}</td>
                                                 <td>
-                                                    {item.status_peminjaman && item.approved ? (
-                                                        <div className="flex justify-center">
-                                                            <span className="badge badge-error">On Loan</span>
-                                                        </div>
-                                                    ) : !item.status_peminjaman && !item.approved ? (
+                                                    {item.status_peminjaman === 2 && item.approved ? (
+                                                        <span className="badge badge-error">On Loan</span>
+                                                    ) : item.status_peminjaman === 1 && !item.approved ? (
                                                         <span className="badge badge-warning">Pending</span>
                                                     ) : (
                                                         <span className="badge badge-success">Returned</span>
@@ -169,9 +167,9 @@ export default function Index({ auth, peminjaman, status, filters }) {
                                                 <td>
                                                     <div className='flex'>
                                                         <div className='mr-[-20px]'>
-                                                            {auth.user.is_admin && !item.approved ? (
+                                                            {can.isAdmin && item.status_peminjaman === 1 && !item.approved ? (
                                                                 <SecondaryButton className='' onClick={() => openModal(item.uuid)}>Approve</SecondaryButton>
-                                                            ) : (!auth.user.is_admin && item.status_peminjaman && item.approved) ? (
+                                                            ) : (!can.isAdmin && item.status_peminjaman === 2 && item.approved) ? (
                                                                 <SecondaryButton className='' onClick={() => openModal(item.uuid)}>Return</SecondaryButton>
                                                             ) : null}
                                                         </div>

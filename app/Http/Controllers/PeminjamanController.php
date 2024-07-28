@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\StatusPeminjaman;
 use App\Models\Peminjaman;
 use Illuminate\Support\Facades\Gate;
 use App\Http\Requests\StorePeminjamanRequest;
 use App\Http\Requests\UpdatePeminjamanRequest;
 use App\Http\Resources\PeminjamanResource;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 
@@ -21,7 +21,7 @@ class PeminjamanController extends Controller
         $time = 60 * 60 * 24;
         $page = request('page', 1);
         $name = Gate::allows('isAdmin') ? 'admin' : $request->user()->name;
-        $cacheKey = $name .'-peminjaman-page-' . $page;
+        $cacheKey = $name . '-peminjaman-page-' . $page;
         $search = request('search');
         $status = request('status');
 
@@ -54,11 +54,12 @@ class PeminjamanController extends Controller
 
         return inertia('Peminjaman/Index', [
             'peminjaman' => PeminjamanResource::collection($peminjaman),
-            'status' => Collection::make([
-                ['value' => '1', 'status' => 'Dipinjam'],
-                ['value' => '0', 'status' => 'Dikembalikan'],
-            ]),
-            'filters' => request()->only('search', 'status')
+            'status' => StatusPeminjaman::getOptions(),
+            'filters' => request()->only('search', 'status'),
+            'can' => [
+                'isAdmin' => Gate::allows('isAdmin'),
+                'isUser' => Gate::denies('isAdmin'),
+            ]
         ]);
     }
 
@@ -106,20 +107,19 @@ class PeminjamanController extends Controller
      */
     public function update(UpdatePeminjamanRequest $request, Peminjaman $peminjaman)
     {
-        if(Gate::allows('isAdmin')) {
+        if (Gate::allows('isAdmin')) {
 
             $peminjaman->update([
                 'tanggal_pinjam' => now(),
-                'status_peminjaman' => true,
+                'status_peminjaman' => StatusPeminjaman::LOAN,
                 'approved' => true,
             ]);
         } else {
             $peminjaman->update([
                 'tanggal_kembali' => now(),
-                'status_peminjaman' => false,
+                'status_peminjaman' => StatusPeminjaman::RETURN,
             ]);
         }
-
     }
 
     /**
